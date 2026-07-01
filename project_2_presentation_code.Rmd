@@ -1,0 +1,301 @@
+
+---
+title: "Hunga-Tonga's eruption and its impact on the weather and the environment"
+subtitle: "project 2"
+author: "Paweł Stefańczyk , Przemysław Kania"
+institute: "MiNI PW"
+date: "10.06.2024"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r, include=FALSE}
+ham_pres <- read.csv("C:\\Users\\przem\\OneDrive\\Pulpit\\PRZEMO\\STUDIES_MINI_PW\\SEM__2__\\R\\Homework_2\\csv_files\\csv_files_for_pressure_data\\Hammamatsu_pressure.csv")
+kas_pres <- read.csv("C:\\Users\\przem\\OneDrive\\Pulpit\\PRZEMO\\STUDIES_MINI_PW\\SEM__2__\\R\\Homework_2\\csv_files\\csv_files_for_pressure_data\\Kasprowy_Wierch_pressure.csv")
+gil_pres <- read.csv("C:\\Users\\przem\\OneDrive\\Pulpit\\PRZEMO\\STUDIES_MINI_PW\\SEM__2__\\R\\Homework_2\\csv_files\\csv_files_for_pressure_data\\Gilsborne_pressure.csv")
+bos_pres <- read.csv("C:\\Users\\przem\\OneDrive\\Pulpit\\PRZEMO\\STUDIES_MINI_PW\\SEM__2__\\R\\Homework_2\\csv_files\\csv_files_for_pressure_data\\Boston_pressure.csv")
+wulkan <- read.csv("C:\\Users\\przem\\OneDrive\\Pulpit\\PRZEMO\\STUDIES_MINI_PW\\SEM__2__\\R\\Homework_2\\csv_files\\csv_files_for_air_pollution_data\\wulkan.csv")
+wyspa_tonga <- read.csv("C:\\Users\\przem\\OneDrive\\Pulpit\\PRZEMO\\STUDIES_MINI_PW\\SEM__2__\\R\\Homework_2\\csv_files\\csv_files_for_air_pollution_data\\wyspa_tonga1.csv")
+Hunga_hapai <- read.csv("C:\\Users\\przem\\OneDrive\\Pulpit\\PRZEMO\\STUDIES_MINI_PW\\SEM__2__\\R\\Homework_2\\csv_files\\csv_files_for_air_pollution_data\\Hunga_hapai1.csv")
+
+library(ggplot2)
+library(plotly)
+library(knitr)
+library(xaringan)
+```
+
+
+# O WULKANIE
+
++ wulkan podwodny
+
++ 65 km od wybrzeży tongatapu, największego archipelagu wysp Tonga
+
++ erupcja 15 stycznia 2022 około godziny 15:30
+
++ erupcjom wulkanów zawsze towarzyszą zmiany w atmosferze i środowisku
+
+![](Hunga_Tonga_volcano.jpg)
+---
+
+```{r, echo=FALSE, out.width='90%'}
+       ####### BOSTON #######
+bos_pres$time <- as.POSIXct(bos_pres$time, format = "%Y-%m-%dT%H:%M")
+mean_bos_pressure <- mean(bos_pres$pressure_hPa)
+gg_bos <- ggplot(bos_pres, aes(x = time, y = pressure_hPa)) + 
+    xlab("TIME (January)") + ylab("PRESSURE (hPa)") + 
+    scale_y_continuous(limits = c(1010,1040), breaks = seq(1010, 1040, by = 5), expand = c(0.1, 0.1)) +
+    scale_x_datetime(breaks = seq(as.POSIXct("2022-01-14"), as.POSIXct("2022-01-17"), by = "6 hours"), 
+        date_labels = "%H:%M", expand = c(0.05, 0.05)) + theme_bw() + geom_line(color = "#FF00FF") +
+    scale_linetype_manual(values = "solid") +
+    ggtitle("BOSTON 2022", subtitle = "USA") +
+    theme(plot.title = element_text(size = 16, face = "bold",color = "blue", hjust = 0.5),
+        plot.subtitle = element_text(size = 12, face = "plain", color = "blue", hjust = 0.5),
+        axis.text.x = element_text(color="black"), axis.text.y = element_text(color="black"),
+        panel.background = element_rect(color="black", fill="white")) +
+    geom_hline(yintercept = mean_bos_pressure, color = "blue", linetype = "dashed") 
+ggplotly(gg_bos)
+```
+
+
+--> nagła zmiana ciśnienia atmosferycznego i tworzenie się tym samym fali uderzeniowej, która osiągnęła prędkość około 1200km/h (dane zebrane na      przedziale czasowym (14.01.2022 - 16.01.2022) <--
+
+---
+
+```{r, echo=FALSE, out.width='90%'}
+       ####### GILSBORNE #######
+gil_pres$time <- as.POSIXct(gil_pres$time, format = "%Y-%m-%dT%H:%M")
+mean_gil_pressure <- mean(gil_pres$pressure_hPa)
+gg_gil <- ggplot(gil_pres, aes(x = time, y = pressure_hPa)) + 
+  xlab("TIME (January)") + ylab("PRESSURE (hPa)") + 
+  scale_y_continuous(limits = c(1005,1035), breaks = seq(1005, 1035, by = 5), expand = c(0.1, 0.1)) +
+  scale_x_datetime(breaks = seq(as.POSIXct("2022-01-14"), as.POSIXct("2022-01-17"), by = "6 hours"), 
+        date_labels = "%H:%M", expand = c(0.05, 0.05)) + theme_bw() + geom_line(color = "#FF00FF") +
+  scale_linetype_manual(values = "solid") +
+  ggtitle("GILSBORNE 2022", subtitle = "New Zeland") +
+  theme(plot.title = element_text(size = 16, face = "bold",color = "blue", hjust = 0.5),
+        plot.subtitle = element_text(size = 12, face = "plain", color = "blue", hjust = 0.5),
+        axis.text.x = element_text(color="black"), axis.text.y = element_text(color="black"),
+        panel.background = element_rect(color="black", fill="white")) +
+  geom_hline(yintercept = mean_gil_pressure, color = "blue", linetype = "dashed") 
+ggplotly(gg_gil)
+```
+
+---
+
+```{r, echo=FALSE, out.width='90%'}
+       ####### HAMMAMATSU #######
+ham_pres$time <- as.POSIXct(ham_pres$time, format = "%Y-%m-%dT%H:%M")
+mean_ham_pressure <- mean(ham_pres$pressure_hPa)
+gg_ham <- ggplot(ham_pres, aes(x = time, y = pressure_hPa)) + 
+  xlab("TIME (January)") + ylab("PRESSURE (hPa)") + 
+  scale_y_continuous(limits = c(980,1025), breaks = seq(980, 1025, by = 5), expand = c(0.1, 0.1)) +
+  scale_x_datetime(breaks = seq(as.POSIXct("2022-01-14"), as.POSIXct("2022-01-17"), by = "6 hours"), 
+        date_labels = "%H:%M", expand = c(0.05, 0.05)) + theme_bw() + geom_line(color = "#FF00FF") +
+  scale_linetype_manual(values = "solid") +
+  ggtitle("HAMMAMATSU 2022", subtitle = "Japan") +
+  theme(plot.title = element_text(size = 16, face = "bold",color = "blue", hjust = 0.5),
+        plot.subtitle = element_text(size = 12, face = "plain", color = "blue", hjust = 0.5),
+        axis.text.x = element_text(color="black"), axis.text.y = element_text(color="black"),
+        panel.background = element_rect(color="black", fill="white")) +
+  geom_hline(yintercept = mean_ham_pressure, color = "blue", linetype = "dashed") 
+ggplotly(gg_ham)
+```
+
+---
+
+```{r, echo=FALSE, out.width='90%'}
+       ####### KASPROWY WIERCH #######
+kas_pres$time <- as.POSIXct(kas_pres$time, format = "%Y-%m-%dT%H:%M")
+mean_kas_pressure <- mean(kas_pres$pressure_hPa)
+gg_kas <- ggplot(kas_pres, aes(x = time, y = pressure_hPa)) + 
+  xlab("TIME (January)") + ylab("PRESSURE (hPa)") + 
+  scale_y_continuous(limits = c(1010,1040), breaks = seq(1010, 1040, by = 5), expand = c(0.1, 0.1)) +
+  scale_x_datetime(breaks = seq(as.POSIXct("2022-01-14"), as.POSIXct("2022-01-17"), by = "6 hours"), 
+        date_labels = "%H:%M", expand = c(0.05, 0.05)) + theme_bw() + geom_line(color = "#FF00FF") +
+  scale_linetype_manual(values = "solid") +
+  ggtitle("KASPROWY WIERCH 2022", subtitle = "Poland") +
+  theme(plot.title = element_text(size = 16, face = "bold",color = "blue", hjust = 0.5),
+        plot.subtitle = element_text(size = 12, face = "plain", color = "blue", hjust = 0.5),
+        axis.text.x = element_text(color="black"), axis.text.y = element_text(color="black"),
+        panel.background = element_rect(color="black", fill="white")) +
+  geom_hline(yintercept = mean_kas_pressure, color = "blue", linetype = "dashed") 
+ggplotly(gg_kas)
+```
+
+---
+
+```{r, echo=FALSE, out.width='90%', out.height='85%'}
+bos_max_value <- max(bos_pres$pressure_hPa)
+ max_bos_index <- which(bos_pres$pressure_hPa == bos_max_value)
+ bos_prev_value <- bos_pres[max_bos_index - 1, "pressure_hPa"]
+ bos_difference <- bos_max_value - bos_prev_value
+gil_max_value <- max(gil_pres$pressure_hPa)
+ max_gil_index <- which(gil_pres$pressure_hPa == gil_max_value)
+ gil_prev_value <- gil_pres[max_gil_index - 1, "pressure_hPa"]
+ gil_difference <- gil_max_value - gil_prev_value
+ham_max_value <- max(ham_pres$pressure_hPa)
+ max_ham_index <- which(ham_pres$pressure_hPa == ham_max_value)
+ ham_prev_value <- ham_pres[max_ham_index - 1, "pressure_hPa"]
+ ham_difference <- ham_max_value - ham_prev_value
+kas_max_value <- max(kas_pres$pressure_hPa)
+ max_kas_index <- which(kas_pres$pressure_hPa == kas_max_value)
+ kas_prev_value <- kas_pres[max_kas_index - 1, "pressure_hPa"]
+ kas_difference <- kas_max_value - kas_prev_value
+all_diff <- data.frame(city = c("BOSTON","GILSBORNE","HAMMAMATSU","KASPROWY WIERCH"), pressure_diff = c(bos_difference,gil_difference,ham_difference,kas_difference))
+gg_pres_difference <- ggplot(all_diff, aes(x = city, y = pressure_diff)) +
+  geom_bar(width = 1, stat = "identity") + theme_bw() + coord_polar("x", start = 1) +
+  scale_fill_brewer(palette = "Pastel1") + ggtitle("PRESSURE DIFFERENCE") +
+  theme(axis.line = element_blank(), axis.ticks = element_blank(),
+        plot.title = element_text(size = 16, face = "bold",color = "blue", hjust = 0.5)) +
+  geom_text(aes(label = paste0(round(pressure_diff, 1), " hPa")), position = position_stack(vjust = 0.75)) 
+gg_pres_difference
+```
+
+---
+
+# Ciekawostki
+
++ erupcja była w przybliżeniu 500 razy silniejsza niż wybuch bomby atomowej zrzuconej na Hiroszimę 
+
++ wybuchowi towarzyszyły wyładowania atmosferyczne; w ciągu 6h zarejerstrowano około 400 000 wulkanicznych błyskawic
+
++ wytworzyło się tsunami o falach osiągających zatrważające wysokości nawet 2m
+
++ erupcja ta, chociaż uznawana za najpotężniejszą od ponad 30 lat, zabiła zaledwie 6 osób
+
++ z racji tego, że do wybuchu doszło pod wodami Oceanu Spokojnego, wytworzony słup pyłu składał się w ponad 60% (około 150 mln ton) z pary wodnej   i wzniósł się na wysokość około 55 km
+
+---
+
+# O dwutlenku siarki w powietrzu
+
++ znacząco ogranicza proces fotosyntezy
+
++ niszczy bakterie glebowe, przyczynia się do wzrostu kwaśnych deszczy
+
++ zbyt wysoki poziom tego związku ma dewastacyjny wpływ na pracę układu oddechowego
+
+---
+
+```{r, echo=FALSE, out.width='95%'}
+wulkan$TIME <- as.Date(wulkan$TIME)
+normal_sulphur_intensity <- mean(wulkan$SULPHUR.DIOXIDE)
+standard_deviation <- sd(wulkan$SULPHUR.DIOXIDE)
+max_spike <- which.max(wulkan$SULPHUR.DIOXIDE - normal_sulphur_intensity)
+t <- ggplot(wulkan, aes(x = TIME, y = SULPHUR.DIOXIDE)) + xlab("CZAS") + ylab("DWUTLENEK SIARKI µg/m³") +
+  geom_line() +
+  geom_hline(yintercept = normal_sulphur_intensity, color = "turquoise4", linetype = "dashed") +
+  geom_ribbon(aes(ymin = normal_sulphur_intensity - standard_deviation, ymax = normal_sulphur_intensity + standard_deviation), alpha = 0.6, colour = "#FFA07A", fill = "#CD8162") +
+  ggtitle("ILOSC DWUTLENKU SIARKI W POWIETRZU (WULKAN)") + 
+  theme(plot.title = element_text(colour = "green", hjust = 0.5, size = 16)) + 
+  theme(plot.background = element_rect(fill = "#E0FFFF", colour = "#E0FFFF")) +
+  scale_y_continuous(limits = c(0, 15), breaks = seq(0, 15, by = 1.25))
+ggplotly(t)
+```
+
+--> Dane przedstawione na powyższych wykresach obejmują okres od poczatku sierpnia do poczatku maja
+(04.08.2021 - 01.05.2022) <--
+
+---
+
+```{r, echo=FALSE, out.width='95%'}
+wyspa_tonga$TIME <- as.Date(wyspa_tonga$TIME)
+normal_sulphur_intensity1 <- mean(wyspa_tonga$SULPHUR.DIOXIDE)
+standard_deviation1 <- sd(wyspa_tonga$SULPHUR.DIOXIDE)
+z <- ggplot(wyspa_tonga, aes(x = TIME, y = SULPHUR.DIOXIDE)) + xlab("CZAS") + ylab("DWUTLENEK SIARKI µg/m³") +
+  geom_line() + 
+  geom_hline(yintercept = normal_sulphur_intensity1, color = "turquoise4", linetype = "dashed") + 
+  geom_ribbon(aes(ymin = normal_sulphur_intensity1 - standard_deviation1, ymax = normal_sulphur_intensity1 + standard_deviation1), alpha = 0.6, colour = "#FFA07A", fill = "#CD8162") +
+  ggtitle("ILOSC DWUTLENKU SIARKI W POWIETRZU (TONGA)") + 
+  theme(plot.title = element_text(colour = "green", hjust = 0.5, size = 16)) + 
+  theme(plot.background = element_rect(fill = "#E0FFFF", colour = "#E0FFFF")) +
+  scale_y_continuous(limits = c(0, 15), breaks = seq(0, 15, by = 1.25))
+ggplotly(z)
+```
+
+---
+
+```{r, echo=FALSE, out.width='95%'}
+Hunga_hapai$TIME <- as.Date(Hunga_hapai$TIME)
+normal_sulphur_intensity2 <- mean(Hunga_hapai$SULPHUR.DIOXIDE)
+standard_deviation2 <- sd(Hunga_hapai$SULPHUR.DIOXIDE)
+k <- ggplot(Hunga_hapai, aes(x = TIME, y = SULPHUR.DIOXIDE)) + xlab("CZAS") + ylab("DWUTLENEK SIARKI µg/m³") +
+  geom_line() +
+  geom_hline(yintercept = normal_sulphur_intensity2, color = "turquoise4", linetype = "dashed") +
+  geom_ribbon(aes(ymin = normal_sulphur_intensity2 - standard_deviation2, ymax = normal_sulphur_intensity2 + standard_deviation2), alpha = 0.6, colour = "#FFA07A", fill = "#CD8162") +
+  ggtitle("ILOSC DWUTLENKU SIARKI W POWIETRZU (HUNGA)") + 
+  theme(plot.title = element_text(colour = "green", hjust = 0.5, size = 16)) + 
+  theme(plot.background = element_rect(fill = "#E0FFFF", colour = "#E0FFFF")) +
+  scale_y_continuous(limits = c(0, 15), breaks = seq(0, 15, by = 1.25))
+ggplotly(k)
+```
+
+---
+
+```{r, echo=FALSE, out.width='95%'}
+islands_names <- c("Wulkan", "Tonga", "Hunga")
+srednie <- data.frame(Wyspa = islands_names, wartosci = c(normal_sulphur_intensity, normal_sulphur_intensity1, normal_sulphur_intensity2))  
+p <- ggplot(srednie, aes(x = islands_names, y = wartosci)) + 
+  geom_bar(stat = "identity", fill = "#6B8E23", width = 0.4, colour = "blue") +
+  labs(x = "Nazwy Wysp", y = "Srednia siarka µg/m³") + 
+  theme_minimal() +
+  scale_y_continuous(limits = c(0, 1.5), breaks = seq(0, 1.5, by = 0.1)) + 
+  ggtitle("SREDNIA ILOSC DWUTLENKU SIARKI NA WYSPACH") + 
+  theme(plot.title = element_text(colour = "#EE9A00", hjust = 0.5, size = 16)) +
+  theme(plot.background = element_rect(fill = "#E0FFFF",colour = "#E0FFFF"))
+ggplotly(p)
+```
+
+---
+
+```{r, echo=FALSE, out.width='95%'}
+wulkan$Year <- format(wulkan$TIME, "%Y")
+wulkan$Month <- format(wulkan$TIME, "%m")
+srednie_miesiace <- aggregate(wulkan$SULPHUR.DIOXIDE, by = wulkan[c("Year", "Month")], mean)
+ord <- order(srednie_miesiace$Year, srednie_miesiace$Month)
+srednie_miesiace <- srednie_miesiace[ord, ]
+srednie_miesiace$MonthName <- c("Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May")
+srednie_miesiace$MonthName <- factor(srednie_miesiace$MonthName, levels = c("Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May"))
+colnames(srednie_miesiace)[3] <- "Srednia"
+s <- ggplot(srednie_miesiace, aes(x = MonthName, y = Srednia)) +
+  geom_bar(stat = "identity", fill = "#76EEC6", width = 0.1, colour = "#458B74") +
+  labs(x = "CZAS", y = "Srednia siarka w miesiacu µg/m³") +
+  ggtitle("Srednie wartosi dwutlenku siarki przy wulkanie") +
+  theme(plot.title = element_text(colour = "#8B4500", hjust = 0.5, size = 16)) +
+  theme(plot.background = element_rect(colour = "#E0FFFF", fill = "#E0FFFF")) +
+  scale_y_continuous(limits = c(0, 3), breaks = seq(0, 3, by = 0.25))
+ggplotly(s)
+```
+
+---
+
+# Wnioski
+
++ Wybuch wulkanu spowodował wzrost poziomu dwutlenku siarki w promieniu co najmniej 5 km
+
++ Faza uśpienia wulkanu również ma wpływ na duży wzrost dwutlenku siarki w powietrzu
+
++ Dwutlenek siarki może utrzymywać się w powietrzu przez ponad miesiąc
+
+---
+
+class: center, middle, inverse
+#Dziękujemy za uwagę
+
+
+### Sources
+
++ https://pl.wikipedia.org/wiki/Hunga_Tonga
++ https://www.youtube.com/watch?v=S-qv_GzGt1k&t=320s
++ https://open-meteo.com/
+
+
+
+
+
